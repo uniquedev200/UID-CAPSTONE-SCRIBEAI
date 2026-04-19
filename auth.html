@@ -238,13 +238,33 @@
       signInWithGoogle();
     }
     
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
     document.getElementById('auth-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const btn = document.getElementById('submit-btn');
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const name = document.getElementById('name').value;
+      const name = document.getElementById('name').value.trim();
+      
+      if (!email || !validateEmail(email)) {
+        showAlert('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      if (!password || password.length < 6) {
+        showAlert('Password must be at least 6 characters', 'error');
+        return;
+      }
+      
+      if (isSignUp && (!name || name.length < 2)) {
+        showAlert('Please enter your full name', 'error');
+        return;
+      }
       
       btn.disabled = true;
       btn.innerHTML = '<span class="loading"></span>';
