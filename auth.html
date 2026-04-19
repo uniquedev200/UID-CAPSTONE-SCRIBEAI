@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - ScribeAI</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+      background: var(--gradient-hero);
+      position: relative;
+    }
+    
+    .auth-page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-10);
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.5s var(--ease-out);
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+    
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: var(--space-6);
+    }
+    
+    .auth-logo svg {
+      color: var(--accent);
+    }
+    
+    .auth-header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+    
+    .auth-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+      color: var(--text-tertiary);
+      font-size: 0.8rem;
+    }
+    
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    
+    .auth-footer {
+      text-align: center;
+      margin-top: var(--space-6);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    
+    .auth-footer a {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .alert {
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+      font-size: 0.85rem;
+      animation: slideDown 0.3s var(--ease-out);
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+    
+    .alert-success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" x2="12" y1="19" y2="22"></line>
+        </svg>
+        ScribeAI
+      </div>
+      <h1 id="auth-title">Welcome back</h1>
+      <p id="auth-subtitle">Sign in to continue to your dashboard</p>
+    </div>
+    
+    <button class="btn-google" onclick="handleGoogleSignIn()">
+      <svg width="20" height="20" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Continue with Google
+    </button>
+    
+    <div class="auth-divider">or</div>
+    
+    <form id="auth-form">
+      <div class="form-group" id="name-group" style="display: none;">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" id="name" placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="email" placeholder="you@company.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="password" placeholder="Enter your password" required minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;" id="submit-btn">
+        Sign In
+      </button>
+    </form>
+    
+    <div class="auth-footer">
+      <span id="toggle-text">
+        Don't have an account? <a href="#" onclick="toggleAuthMode(event)">Sign up</a>
+      </span>
+    </div>
+  </div>
+  
+  <script src="config.js"></script>
+  <script src="services/auth.js"></script>
+  <script>
+    let isSignUp = false;
+    
+    async function initAuthPage() {
+      await initAuth();
+      if (window.currentUser) {
+        window.location.href = 'dashboard.html';
+      }
+    }
+    
+    function toggleAuthMode(e) {
+      e.preventDefault();
+      isSignUp = !isSignUp;
+      
+      const title = document.getElementById('auth-title');
+      const subtitle = document.getElementById('auth-subtitle');
+      const btn = document.getElementById('submit-btn');
+      const toggle = document.getElementById('toggle-text');
+      const nameGroup = document.getElementById('name-group');
+      
+      if (isSignUp) {
+        title.textContent = 'Create account';
+        subtitle.textContent = 'Start your free trial';
+        btn.textContent = 'Create Account';
+        toggle.innerHTML = 'Already have an account? <a href="#" onclick="toggleAuthMode(event)">Sign in</a>';
+        nameGroup.style.display = 'block';
+      } else {
+        title.textContent = 'Welcome back';
+        subtitle.textContent = 'Sign in to continue to your dashboard';
+        btn.textContent = 'Sign In';
+        toggle.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuthMode(event)">Sign up</a>';
+        nameGroup.style.display = 'none';
+      }
+    }
+    
+    function handleGoogleSignIn() {
+      signInWithGoogle();
+    }
+    
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('submit-btn');
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const name = document.getElementById('name').value;
+      
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading"></span>';
+      
+      let result;
+      if (isSignUp) {
+        result = await signUp(email, password, name);
+      } else {
+        result = await signIn(email, password);
+      }
+      
+      if (result.error) {
+        showAlert(result.error, 'error');
+        btn.disabled = false;
+        btn.textContent = isSignUp ? 'Create Account' : 'Sign In';
+      } else {
+        showAlert('Welcome back! Redirecting...', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+      }
+    });
+    
+    function showAlert(message, type) {
+      const existing = document.querySelector('.alert');
+      if (existing) existing.remove();
+      
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      
+      const form = document.querySelector('#auth-form');
+      form.insertBefore(alert, form.firstChild);
+      
+      setTimeout(() => alert.remove(), 5000);
+    }
+    
+    initAuthPage();
+  </script>
+</body>
+</html>

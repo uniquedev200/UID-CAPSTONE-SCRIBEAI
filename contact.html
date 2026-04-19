@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - ScribeAI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo">ScribeAI</a>
+      
+      <nav class="header-nav centered">
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+      
+      <div class="header-actions">
+        <a href="auth.html" class="btn btn-secondary">Sign In</a>
+        <a href="auth.html" class="btn btn-primary">Get Started</a>
+      </div>
+      
+      <button class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+  
+  <section class="section" style="min-height: calc(100vh - 64px); display: flex; align-items: center;">
+    <div class="container">
+      <div class="contact-wrapper">
+        <div class="contact-card">
+          <div class="auth-header">
+            <h1>Get in Touch</h1>
+            <p>Have questions? We'd love to hear from you.</p>
+          </div>
+          
+          <form id="contact-form">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-input" id="name" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="email" placeholder="you@company.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-input" id="message" placeholder="How can we help?" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;" id="submit-btn">
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>ScribeAI</h3>
+        <p>AI-powered meeting transcription for modern teams.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="features.html">Features</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <a href="#">Documentation</a>
+        <a href="#">API</a>
+        <a href="#">Help Center</a>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2024 ScribeAI. All rights reserved.
+    </div>
+  </footer>
+  
+  <script src="config.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      
+      btn.innerHTML = '<span class="loading"></span>';
+      btn.disabled = true;
+      
+      try {
+        const result = await submitContact(name, email, message);
+        if (!result.error) {
+          alert('Message sent successfully! We\'ll get back to you soon.');
+          document.getElementById('contact-form').reset();
+        } else {
+          alert('Failed to send message. Please try again.');
+        }
+      } catch (e) {
+        alert('Connection error. Please try again later.');
+      }
+      
+      btn.innerHTML = 'Send Message';
+      btn.disabled = false;
+    });
+  </script>
+</body>
+</html>

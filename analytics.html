@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - ScribeAI</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="config.js"></script>
+  <script src="services/api.js"></script>
+  <script src="services/auth.js"></script>
+  <script src="ui.js"></script>
+</head>
+<body>
+  <div class="progress-bar" id="progress-bar"></div>
+  
+  <header class="header dashboard-header">
+    <div class="header-inner">
+      <a href="dashboard.html" class="header-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" x2="12" y1="19" y2="22"></line>
+        </svg>
+        <span>ScribeAI</span>
+      </a>
+      
+      <div class="header-center"></div>
+      
+      <div class="header-actions">
+        <button class="header-btn" title="Help" onclick="showHelpModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+        <div class="header-user-dropdown" id="header-user-dropdown">
+          <button class="header-avatar-btn" id="header-avatar-btn" onclick="toggleUserDropdown()">
+            <div class="header-avatar" id="header-avatar">S</div>
+          </button>
+          <div class="user-dropdown-menu" id="user-dropdown-menu">
+            <div class="dropdown-user-info" id="dropdown-user-info">
+              <div class="dropdown-user-name" id="dropdown-user-name">User</div>
+              <div class="dropdown-user-email" id="dropdown-user-email">user@email.com</div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="settings.html" class="dropdown-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              Settings
+            </a>
+            <button class="dropdown-item" onclick="signOut()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" x2="9" y1="12" y2="12"></line>
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div class="page-container">
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar" id="profile-avatar">S</div>
+        <div>
+          <div class="sidebar-name" id="profile-name">Loading...</div>
+          <div class="sidebar-email" id="profile-email">...</div>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          Dashboard
+        </a>
+        <a href="analytics.html" class="sidebar-link active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Analytics
+        </a>
+        <a href="settings.html" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          Settings
+        </a>
+
+        <div class="sidebar-upload">
+        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" x2="12" y1="3" y2="15"></line>
+          </svg>
+          Upload Meeting
+        </button>
+        <input type="file" id="file-input" accept="audio/*,video/*" hidden onchange="handleFileUpload(this.files[0])">
+      </div>
+
+      </nav>
+      
+      <div style="margin-top: auto; padding: var(--space-4); border-top: 1px solid var(--border);">
+        <button class="btn btn-ghost" onclick="signOut()" style="width: 100%; justify-content: flex-start;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" x2="9" y1="12" y2="12"></line>
+          </svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+    
+    <main class="main-content analytics-main">
+      <div class="analytics-header">
+        <div>
+          <h1>Meeting Insights</h1>
+          <p class="analytics-subtitle" id="analytics-subtitle">Track your meeting patterns and team productivity</p>
+        </div>
+        <select id="meeting-select" class="meeting-select" onchange="selectMeetingAnalytics(this.value)">
+          <option value="">All Meetings (Overview)</option>
+        </select>
+      </div>
+      
+      
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(56, 189, 248, 0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-value" id="total-meetings">0</div>
+            <div class="metric-label">Meetings</div>
+          </div>
+          <div class="metric-trend up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>+12%</span>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-value" id="total-minutes">0</div>
+            <div class="metric-label">Total Minutes</div>
+          </div>
+          <div class="metric-trend up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>+8%</span>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(129, 140, 248, 0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-value" id="total-actions">0</div>
+            <div class="metric-label">Action Items</div>
+          </div>
+          <div class="metric-trend neutral">
+            <span>-</span>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(245, 158, 11, 0.15);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-value" id="completion-rate">0%</div>
+            <div class="metric-label">Completion Rate</div>
+          </div>
+          <div class="metric-trend up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>+5%</span>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="charts-row">
+        <div class="chart-card large">
+          <div class="chart-header">
+            <h3 id="activity-chart-title">Meeting Activity</h3>
+          </div>
+          <div class="chart-container">
+            <canvas id="activityChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 id="mood-chart-title">Mood Score</h3>
+          </div>
+          <div class="chart-container doughnut">
+            <canvas id="sentimentChart"></canvas>
+            <div class="doughnut-center">
+              <span class="doughnut-value" id="avg-sentiment">-</span>
+              <span class="doughnut-label">Avg Mood</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="meeting-details-section" id="meeting-details-section" style="display: none;">
+        <div class="meeting-details-header">
+          <h2 id="selected-meeting-title">Meeting Title</h2>
+          <span class="meeting-mood-badge" id="selected-meeting-mood">positive</span>
+        </div>
+        
+        <div class="meeting-details-grid">
+          <div class="meeting-detail-card">
+            <h4>Summary</h4>
+            <p id="selected-meeting-summary">Loading...</p>
+          </div>
+          
+          <div class="meeting-detail-card">
+            <h4>Participants</h4>
+            <div id="selected-meeting-speakers" class="speaker-chips"></div>
+          </div>
+          
+          <div class="meeting-detail-card wide">
+            <h4>Speaking Time</h4>
+            <div id="speakers-breakdown" class="speakers-breakdown"></div>
+          </div>
+          
+          <div class="meeting-detail-card wide">
+            <h4>Action Items</h4>
+            <div id="selected-meeting-actions" class="action-items-list"></div>
+          </div>
+        </div>
+        
+        
+        <div class="meeting-ai-chat">
+          <h4>Ask About This Meeting</h4>
+          <div class="ai-messages" id="meeting-ai-messages">
+            <div class="ai-message bot">
+              <div class="ai-avatar">AI</div>
+              <div class="ai-bubble">Ask me anything about this meeting. I'll search through the transcript to find answers.</div>
+            </div>
+          </div>
+          <div class="ai-input-container">
+            <input type="text" id="meeting-ai-input" placeholder="Type your question..." onkeypress="handleMeetingAIKeypress(event)">
+            <button class="ai-send-btn" onclick="askMeetingAI()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="bottom-row" id="bottom-row">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Team Workload</h3>
+          </div>
+          <div class="chart-container horizontal">
+            <canvas id="workloadChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="recent-card">
+          <div class="chart-header">
+            <h3>All Meetings</h3>
+            <a href="dashboard.html" class="view-all">View all</a>
+          </div>
+          <div class="recent-list" id="recent-list"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <div id="toast-container"></div>
+  
+  <script src="config.js"></script>
+  <script src="services/auth.js"></script>
+  <script src="services/api.js"></script>
+  <script>
+    let activityChart, sentimentChart, workloadChart;
+    let allTranscripts = [];
+    let selectedMeeting = null;
+    let selectedMeetingAI = null;
+    
+    async function initAnalytics() {
+      const user = await requireAuth();
+      if (!user) return;
+      
+      updateAuthUI();
+      initCharts();
+      await loadAnalytics();
+    }
+    
+    async function loadAnalytics() {
+      console.log('Loading analytics data...');
+      
+      try {
+        const result = await api.get('/api/transcripts');
+        if (result.data?.data?.length) {
+          allTranscripts = result.data.data;
+          console.log('Loaded from backend:', allTranscripts.length);
+        }
+      } catch (e) {
+        console.log('Backend fetch failed, trying sample data:', e.message);
+      }
+      
+      if (allTranscripts.length === 0 && window.sampleMeetings) {
+        console.log('Using sample meetings:', window.sampleMeetings.length);
+        allTranscripts = window.sampleMeetings;
+      }
+      
+      console.log('Total transcripts:', allTranscripts.length);
+      
+      updateOverviewStats();
+      updateCharts(allTranscripts);
+      renderRecentMeetings();
+      populateMeetingSelector();
+    }
+    
+    function updateOverviewStats() {
+      let totalMinutes = 0;
+      let totalActions = 0;
+      let completedActions = 0;
+      let positive = 0, neutral = 0, negative = 0;
+      const assignees = {};
+      
+      allTranscripts.forEach(t => {
+        const durationMatch = t.duration?.match(/(\d+):(\d+)/);
+        if (durationMatch) {
+          totalMinutes += parseInt(durationMatch[1]) + parseInt(durationMatch[2]) / 60;
+        }
+        
+        const sentiment = t.sentiment || 'neutral';
+        if (sentiment === 'positive') positive++;
+        else if (sentiment === 'negative') negative++;
+        else neutral++;
+        
+        const items = typeof t.actionItems === 'string' ? JSON.parse(t.actionItems || '[]') : (t.actionItems || []);
+        items.forEach(item => {
+          totalActions++;
+          if (item.completed) completedActions++;
+          if (item.assignee) {
+            assignees[item.assignee] = (assignees[item.assignee] || 0) + 1;
+          }
+        });
+      });
+      
+      const completionRate = totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
+      
+      document.getElementById('total-meetings').textContent = allTranscripts.length;
+      document.getElementById('total-minutes').textContent = Math.round(totalMinutes);
+      document.getElementById('total-actions').textContent = totalActions;
+      document.getElementById('completion-rate').textContent = completionRate + '%';
+      
+      sentimentChart.data.datasets[0].data = [positive || 1, neutral || 1, negative || 1];
+      sentimentChart.update();
+      
+      const names = Object.keys(assignees);
+      workloadChart.data.labels = names;
+      workloadChart.data.datasets[0].data = names.map(n => assignees[n]);
+      workloadChart.update();
+      
+      document.getElementById('avg-sentiment').textContent = getAvgSentiment(positive, neutral, negative);
+    }
+    
+    function updateCharts(transcripts) {
+      const labels = transcripts.slice(0, 7).map((t, i) => t.title.substring(0, 15) + (t.title.length > 15 ? '...' : ''));
+      const durations = transcripts.slice(0, 7).map(t => {
+        const m = t.duration?.match(/(\d+):(\d+)/);
+        return m ? parseInt(m[1]) + parseInt(m[2]) / 60 : 0;
+      });
+      
+      activityChart.data.labels = labels;
+      activityChart.data.datasets[0].data = durations;
+      activityChart.update();
+    }
+    
+    function populateMeetingSelector() {
+      const select = document.getElementById('meeting-select');
+      allTranscripts.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t.id;
+        option.textContent = t.title;
+        select.appendChild(option);
+      });
+    }
+    
+    function selectMeetingAnalytics(meetingId) {
+      const detailsSection = document.getElementById('meeting-details-section');
+      const bottomRow = document.getElementById('bottom-row');
+      
+      if (!meetingId) {
+        selectedMeeting = null;
+        selectedMeetingAI = null;
+        detailsSection.style.display = 'none';
+        bottomRow.style.display = 'grid';
+        document.getElementById('analytics-subtitle').textContent = 'Track your meeting patterns and team productivity';
+        document.getElementById('activity-chart-title').textContent = 'Meeting Activity';
+        document.getElementById('mood-chart-title').textContent = 'Mood Score';
+        updateOverviewStats();
+        updateCharts(allTranscripts);
+        return;
+      }
+      
+      selectedMeeting = allTranscripts.find(t => t.id == meetingId);
+      selectedMeetingAI = selectedMeeting;
+      
+      if (selectedMeeting) {
+        bottomRow.style.display = 'none';
+        detailsSection.style.display = 'block';
+        
+        document.getElementById('analytics-subtitle').textContent = 'Viewing: ' + selectedMeeting.title;
+        document.getElementById('selected-meeting-title').textContent = selectedMeeting.title;
+        document.getElementById('selected-meeting-mood').textContent = selectedMeeting.sentiment || 'neutral';
+        document.getElementById('selected-meeting-mood').className = 'meeting-mood-badge ' + (selectedMeeting.sentiment || 'neutral');
+        document.getElementById('selected-meeting-summary').textContent = selectedMeeting.summary || 'No summary available.';
+        
+        // Speakers
+        const speakers = selectedMeeting.speakers || [];
+        document.getElementById('selected-meeting-speakers').innerHTML = speakers.map(s => 
+          `<span class="speaker-chip">${s}</span>`
+        ).join('');
+        
+        // Speaking time breakdown
+        const speakerCounts = {};
+        const text = selectedMeeting.transcriptText || '';
+        text.split('\n').forEach(line => {
+          const match = line.match(/^(\w+):\s/);
+          if (match) {
+            speakerCounts[match[1]] = (speakerCounts[match[1]] || 0) + 1;
+          }
+        });
+        
+        const total = Object.values(speakerCounts).reduce((a, b) => a + b, 0);
+        const colors = ['#6366f1', '#38bdf8', '#10b981', '#f59e0b', '#ec4899'];
+        let speakerHTML = '';
+        Object.entries(speakerCounts).forEach(([name, count], i) => {
+          const pct = Math.round((count / total) * 100);
+          speakerHTML += `
+            <div class="speaker-bar-item">
+              <span class="speaker-name">${name}</span>
+              <div class="speaker-bar"><div class="speaker-bar-fill" style="width: ${pct}%; background: ${colors[i % colors.length]}"></div></div>
+              <span class="speaker-pct">${pct}%</span>
+            </div>
+          `;
+        });
+        document.getElementById('speakers-breakdown').innerHTML = speakerHTML;
+        
+        // Action items
+        const actions = typeof selectedMeeting.actionItems === 'string' 
+          ? JSON.parse(selectedMeeting.actionItems || '[]') 
+          : (selectedMeeting.actionItems || []);
+        document.getElementById('selected-meeting-actions').innerHTML = actions.length > 0 
+          ? actions.map(a => `
+            <div class="action-chip ${a.completed ? 'completed' : ''}">
+              <span class="action-check">${a.completed ? '✓' : '○'}</span>
+              <span>${a.title}</span>
+              <span class="action-owner">${a.assignee || 'Unassigned'}</span>
+            </div>
+          `).join('')
+          : '<p style="color: var(--text-muted); font-size: 0.9rem;">No action items for this meeting.</p>';
+        
+        // Reset AI messages
+        document.getElementById('meeting-ai-messages').innerHTML = `
+          <div class="ai-message bot">
+            <div class="ai-avatar">AI</div>
+            <div class="ai-bubble">Ask me anything about this meeting. I'll search through the transcript to find answers.</div>
+          </div>
+        `;
+      }
+    }
+    
+    function handleMeetingAIKeypress(e) {
+      if (e.key === 'Enter') askMeetingAI();
+    }
+    
+    async function askMeetingAI() {
+      const input = document.getElementById('meeting-ai-input');
+      const messages = document.getElementById('meeting-ai-messages');
+      
+      if (!input?.value.trim()) return;
+      
+      if (!selectedMeetingAI) {
+        messages.innerHTML += `
+          <div class="ai-message bot">
+            <div class="ai-avatar">AI</div>
+            <div class="ai-bubble">Please select a meeting first.</div>
+          </div>
+        `;
+        messages.scrollTop = messages.scrollHeight;
+        return;
+      }
+      
+      const question = input.value.trim();
+      input.value = '';
+      
+      messages.innerHTML += `
+        <div class="ai-message user">
+          <div class="ai-bubble">${escapeHtml(question)}</div>
+        </div>
+      `;
+      
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'ai-message bot';
+      typingDiv.innerHTML = `
+        <div class="ai-avatar">AI</div>
+        <div class="ai-bubble typing-indicator"><span></span><span></span><span></span></div>
+      `;
+      messages.appendChild(typingDiv);
+      messages.scrollTop = messages.scrollHeight;
+      
+      // Call Groq AI via backend
+      const { data, error } = await askMeetingAI(selectedMeetingAI.id, question);
+      
+      if (error) {
+        typingDiv.innerHTML = `
+          <div class="ai-avatar">AI</div>
+          <div class="ai-bubble" style="color: var(--accent-error);">Error: ${error}</div>
+        `;
+      } else {
+        typingDiv.innerHTML = `
+          <div class="ai-avatar">AI</div>
+          <div class="ai-bubble">${escapeHtml(data?.data?.response || data?.response || 'I could not process that request.')}</div>
+        `;
+      }
+      messages.scrollTop = messages.scrollHeight;
+    }
+    
+    function initCharts() {
+      const chartDefaults = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      };
+      
+      activityChart = new Chart(document.getElementById('activityChart'), {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Minutes',
+            data: [],
+            backgroundColor: 'rgba(56, 189, 248, 0.6)',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          ...chartDefaults,
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+            x: { grid: { display: false }, ticks: { color: '#64748b', maxRotation: 45 } }
+          }
+        }
+      });
+      
+      sentimentChart = new Chart(document.getElementById('sentimentChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Positive', 'Neutral', 'Negative'],
+          datasets: [{ data: [1, 1, 1], backgroundColor: ['#10b981', '#94a3b8', '#ef4444'], borderWidth: 0 }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '70%',
+          plugins: { legend: { display: false } }
+        }
+      });
+      
+      workloadChart = new Chart(document.getElementById('workloadChart'), {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{ label: 'Tasks', data: [], backgroundColor: ['#6366f1', '#38bdf8', '#10b981', '#f59e0b', '#ec4899'] }]
+        },
+        options: {
+          ...chartDefaults,
+          indexAxis: 'y',
+          scales: {
+            x: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+            y: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+          }
+        }
+      });
+    }
+    
+    function getAvgSentiment(pos, neu, neg) {
+      const total = pos + neu + neg;
+      if (total === 0) return '-';
+      const score = ((pos * 100) + (neu * 50)) / total;
+      if (score >= 75) return 'Great';
+      if (score >= 50) return 'Good';
+      return 'Okay';
+    }
+    
+    function renderRecentMeetings() {
+      const container = document.getElementById('recent-list');
+      if (!allTranscripts.length) {
+        container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px;">No meetings yet.</p>';
+        return;
+      }
+      
+      container.innerHTML = allTranscripts.map(t => `
+        <div class="recent-item" onclick="selectMeetingAnalytics(${t.id})">
+          <div class="recent-item-left">
+            <div class="recent-item-icon ${t.sentiment || 'neutral'}">
+              ${getSentimentIcon(t.sentiment)}
+            </div>
+            <div class="recent-item-info">
+              <div class="recent-item-title">${escapeHtml(t.title)}</div>
+              <div class="recent-item-meta">${t.duration || 'N/A'} • ${formatDate(t.createdAt || t.created_at || t.date)}</div>
+            </div>
+          </div>
+          <div class="recent-item-badge ${t.sentiment || 'neutral'}">${t.sentiment || 'neutral'}</div>
+        </div>
+      `).join('');
+    }
+    
+    function getSentimentIcon(sentiment) {
+      if (sentiment === 'positive') return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>';
+      if (sentiment === 'negative') return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>';
+      return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>';
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    function formatDate(dateString) {
+      if (!dateString) return 'Unknown';
+      const date = new Date(dateString);
+      const now = new Date();
+      const diff = now - date;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      if (days === 0) return 'Today';
+      if (days === 1) return 'Yesterday';
+      if (days < 7) return `${days} days ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+    
+    document.addEventListener('DOMContentLoaded', initAnalytics);
+  </script>
+  
+  <style>
+    .analytics-main { padding: var(--space-6); max-width: 1200px; }
+    .analytics-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-6); flex-wrap: wrap; gap: var(--space-4); }
+    .analytics-header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: var(--space-1); }
+    .analytics-subtitle { color: var(--text-muted); font-size: 0.9rem; }
+    .meeting-select { padding: var(--space-3) var(--space-4); background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); color: var(--text-main); font-size: 0.9rem; min-width: 250px; cursor: pointer; }
+    .meeting-select:focus { outline: none; border-color: var(--accent); }
+    
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-bottom: var(--space-6); }
+    .metric-card { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); transition: all 0.2s; }
+    .metric-card:hover { border-color: var(--border-default); transform: translateY(-2px); }
+    .metric-icon { width: 48px; height: 48px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .metric-info { flex: 1; }
+    .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+    .metric-label { font-size: 0.8rem; color: var(--text-muted); }
+    .metric-trend { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 500; }
+    .metric-trend.up { color: #10b981; }
+    .metric-trend.down { color: #ef4444; }
+    .metric-trend.neutral { color: var(--text-muted); }
+    
+    .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
+    .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-5); }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
+    .chart-header h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
+    .chart-container { height: 200px; position: relative; }
+    .chart-container.doughnut { display: flex; align-items: center; justify-content: center; }
+    .chart-container.horizontal { height: 150px; }
+    .doughnut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+    .doughnut-value { display: block; font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
+    .doughnut-label { font-size: 0.75rem; color: var(--text-muted); }
+    
+    .meeting-details-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-6); margin-bottom: var(--space-4); }
+    .meeting-details-header { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 1px solid var(--border); }
+    .meeting-details-header h2 { font-size: 1.25rem; font-weight: 600; }
+    .meeting-mood-badge { padding: 4px 12px; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 500; text-transform: capitalize; }
+    .meeting-mood-badge.positive { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .meeting-mood-badge.neutral { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .meeting-mood-badge.negative { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    
+    .meeting-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6); }
+    .meeting-detail-card { background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4); }
+    .meeting-detail-card.wide { grid-column: span 2; }
+    .meeting-detail-card h4 { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3); }
+    .meeting-detail-card p { font-size: 0.9rem; line-height: 1.6; color: var(--text-main); }
+    
+    .speaker-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .speaker-chip { padding: var(--space-1) var(--space-3); background: var(--bg-elevated); border-radius: var(--radius-full); font-size: 0.85rem; color: var(--text-main); }
+    
+    .speakers-breakdown { display: flex; flex-direction: column; gap: var(--space-3); }
+    .speaker-bar-item { display: flex; align-items: center; gap: var(--space-3); }
+    .speaker-bar-item .speaker-name { min-width: 80px; font-size: 0.85rem; color: var(--text-main); }
+    .speaker-bar { flex: 1; height: 8px; background: var(--bg-elevated); border-radius: var(--radius-full); overflow: hidden; }
+    .speaker-bar-fill { height: 100%; border-radius: var(--radius-full); }
+    .speaker-pct { min-width: 40px; text-align: right; font-size: 0.8rem; color: var(--text-muted); }
+    
+    .action-items-list { display: flex; flex-direction: column; gap: var(--space-2); }
+    .action-chip { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); background: var(--bg-elevated); border-radius: var(--radius-md); font-size: 0.85rem; }
+    .action-chip.completed { opacity: 0.6; text-decoration: line-through; }
+    .action-check { color: var(--accent-success); font-weight: 600; }
+    .action-owner { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); }
+    
+    .meeting-ai-chat { border-top: 1px solid var(--border); padding-top: var(--space-4); }
+    .meeting-ai-chat h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: var(--space-3); color: var(--text-main); }
+    .ai-messages { max-height: 200px; overflow-y: auto; margin-bottom: var(--space-3); display: flex; flex-direction: column; gap: var(--space-3); }
+    .ai-message { display: flex; gap: var(--space-3); }
+    .ai-message.user { flex-direction: row-reverse; }
+    .ai-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%); color: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; }
+    .ai-message.user .ai-avatar { background: var(--bg-elevated); color: var(--text-muted); }
+    .ai-bubble { max-width: 80%; padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); font-size: 0.9rem; line-height: 1.5; }
+    .ai-message.bot .ai-bubble { background: var(--bg-elevated); color: var(--text-main); border-bottom-left-radius: 4px; }
+    .ai-message.user .ai-bubble { background: var(--accent); color: var(--bg-main); border-bottom-right-radius: 4px; }
+    .typing-indicator { display: flex; gap: 4px; padding: var(--space-2); }
+    .typing-indicator span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: typingBounce 1.4s infinite; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+    .ai-input-container { display: flex; gap: var(--space-2); }
+    .ai-input-container input { flex: 1; padding: var(--space-3) var(--space-4); background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-lg); color: var(--text-main); font-size: 0.9rem; }
+    .ai-input-container input:focus { outline: none; border-color: var(--accent); }
+    .ai-send-btn { width: 44px; height: 44px; background: var(--accent); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: var(--bg-main); cursor: pointer; transition: all 0.2s; border: none; }
+    .ai-send-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+    
+    .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .view-all { font-size: 0.8rem; color: var(--accent); text-decoration: none; }
+    .view-all:hover { text-decoration: underline; }
+    
+    .recent-list { display: flex; flex-direction: column; max-height: 300px; overflow-y: auto; }
+    .recent-item { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3); border-radius: var(--radius-md); cursor: pointer; transition: background 0.2s; }
+    .recent-item:hover { background: var(--bg-hover); }
+    .recent-item-left { display: flex; align-items: center; gap: var(--space-3); }
+    .recent-item-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .recent-item-icon.positive { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .recent-item-icon.neutral { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .recent-item-icon.negative { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .recent-item-info { min-width: 0; }
+    .recent-item-title { font-size: 0.9rem; font-weight: 500; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .recent-item-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .recent-item-badge { padding: 2px 8px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 500; text-transform: capitalize; }
+    .recent-item-badge.positive { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .recent-item-badge.neutral { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .recent-item-badge.negative { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    
+    @media (max-width: 1024px) {
+      .metrics-row { grid-template-columns: repeat(2, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+      .bottom-row { grid-template-columns: 1fr; }
+      .meeting-details-grid { grid-template-columns: 1fr; }
+      .meeting-detail-card.wide { grid-column: span 1; }
+    }
+    @media (max-width: 768px) {
+      .metrics-row { grid-template-columns: 1fr; }
+      .analytics-header { flex-direction: column; }
+      .meeting-select { width: 100%; }
+    }
+  </style>
+</body>
+</html>

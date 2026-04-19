@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - ScribeAI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <header class="header dashboard-header">
+    <div class="header-inner">
+      <a href="dashboard.html" class="header-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" x2="12" y1="19" y2="22"></line>
+        </svg>
+        <span>ScribeAI</span>
+      </a>
+
+      <div class="header-center"></div>
+
+      <div class="header-actions">
+        <button class="header-btn" title="Help" onclick="showHelpModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+        <div class="header-user-dropdown" id="header-user-dropdown">
+          <button class="header-avatar-btn" id="header-avatar-btn" onclick="toggleUserDropdown()">
+            <div class="header-avatar" id="header-avatar">S</div>
+          </button>
+          <div class="user-dropdown-menu" id="user-dropdown-menu">
+            <div class="dropdown-user-info" id="dropdown-user-info">
+              <div class="dropdown-user-name" id="dropdown-user-name">User</div>
+              <div class="dropdown-user-email" id="dropdown-user-email">user@email.com</div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="settings.html" class="dropdown-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+                </path>
+              </svg>
+              Settings
+            </a>
+            <button class="dropdown-item" onclick="signOut()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" x2="9" y1="12" y2="12"></line>
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-container">
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar" id="profile-avatar">S</div>
+        <div>
+          <div class="sidebar-name" id="profile-name">Loading...</div>
+          <div class="sidebar-email" id="profile-email">...</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          Dashboard
+        </a>
+        <a href="analytics.html" class="sidebar-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Analytics
+        </a>
+        <a href="settings.html" class="sidebar-link active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+          Settings
+        </a>
+
+        <div class="sidebar-upload">
+        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" x2="12" y1="3" y2="15"></line>
+          </svg>
+          Upload Meeting
+        </button>
+        <input type="file" id="file-input" accept="audio/*,video/*" hidden onchange="handleFileUpload(this.files[0])">
+      </div>
+
+      </nav>
+
+      <div style="margin-top: auto; padding: var(--space-4); border-top: 1px solid var(--border);">
+        <button class="btn btn-ghost" onclick="signOut()" style="width: 100%; justify-content: flex-start;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" x2="9" y1="12" y2="12"></line>
+          </svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <h1 style="margin-bottom: var(--space-6);">Settings</h1>
+
+      <div class="settings-card" style="margin-bottom: var(--space-6);">
+        <h3 style="margin-bottom: var(--space-4);">Profile</h3>
+        <form id="profile-form">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="settings-email" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <input type="text" class="form-input" id="settings-name" placeholder="Your name">
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+
+      <div class="settings-card" style="margin-bottom: var(--space-6);">
+        <h3 style="margin-bottom: var(--space-4);">Preferences</h3>
+        <div class="settings-toggle">
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Email notifications</div>
+              <div class="toggle-desc">Get notified when new transcriptions are ready</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="email-notifications" checked
+                onchange="savePreference('emailNotifications', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Auto-summarize</div>
+              <div class="toggle-desc">Automatically generate meeting summaries</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="auto-summarize" checked
+                onchange="savePreference('autoSummarize', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Sentiment analysis</div>
+              <div class="toggle-desc">Analyze meeting mood and tone</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="sentiment-analysis" checked
+                onchange="savePreference('sentimentAnalysis', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card danger-zone">
+        <h3 style="margin-bottom: var(--space-4);">Account</h3>
+        <p style="color: var(--text-muted); margin-bottom: var(--space-4);">
+          Once you delete your account, there is no going back. Please be certain.
+        </p>
+        <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+      </div>
+    </main>
+  </div>
+
+  <div class="chat-widget">
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <h4>ScribeAssistant</h4>
+        <button class="chat-close" id="chat-close">×</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-message bot">Hi! How can I help you today?</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Ask me anything...">
+        <button class="btn btn-primary btn-sm" id="chat-send">Send</button>
+      </div>
+    </div>
+    <button class="chat-toggle" id="chat-toggle">Chat</button>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="services/auth.js"></script>
+  <script src="services/api.js"></script>
+  <script src="ui.js"></script>
+
+  <script>
+    async function initSettings() {
+      const user = await requireAuth();
+      if (!user) return;
+
+      updateAuthUI();
+
+      document.getElementById('settings-email').value = user.email || '';
+      document.getElementById('settings-name').value = user.name || '';
+
+      loadPreferences();
+    }
+
+    function loadPreferences() {
+      const prefs = JSON.parse(localStorage.getItem('scribeai_prefs') || '{}');
+      document.getElementById('email-notifications').checked = prefs.emailNotifications !== false;
+      document.getElementById('auto-summarize').checked = prefs.autoSummarize !== false;
+      document.getElementById('sentiment-analysis').checked = prefs.sentimentAnalysis !== false;
+    }
+
+    function savePreference(key, value) {
+      const prefs = JSON.parse(localStorage.getItem('scribeai_prefs') || '{}');
+      prefs[key] = value;
+      localStorage.setItem('scribeai_prefs', JSON.stringify(prefs));
+      showToast('Preference saved');
+    }
+
+    function deleteAccount() {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        showToast('Account deletion is disabled in demo mode', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initSettings);
+  </script>
+
+  <style>
+    .settings-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+    }
+
+    .settings-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .settings-toggle {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) 0;
+    }
+
+    .toggle-label {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .toggle-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-full);
+      transition: 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle-switch input:checked+.toggle-slider {
+      background: var(--accent);
+    }
+
+    .toggle-switch input:checked+.toggle-slider::before {
+      transform: translateX(22px);
+    }
+
+    .danger-zone {
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+  </style>
+</body>
+
+</html>
